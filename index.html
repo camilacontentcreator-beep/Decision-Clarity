@@ -577,7 +577,10 @@ select {
 }
 
 .report-card {
-  background: rgba(255, 255, 255, 0.68);
+  background: transparent;
+  border: none;
+  display: grid;
+  gap: 16px;
 }
 
 .readiness-card {
@@ -586,32 +589,147 @@ select {
 }
 
 .report-section {
-  padding: 18px;
+  padding: 20px 22px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: rgba(255,255,255,0.82);
 }
 
-.report-list,
-.plain-list {
+.report-section.highlight {
+  border-color: rgba(41, 90, 82, 0.45);
+  background: rgba(217, 235, 229, 0.35);
+}
+
+.report-section h3 {
+  margin: 6px 0 10px;
+  font-size: 1.2rem;
+}
+
+.report-intro {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.report-bullets {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.report-bullets li {
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.7);
+  border: 1px solid rgba(214,204,188,0.6);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.report-list {
   margin: 12px 0 0;
   padding-left: 18px;
   color: var(--muted);
 }
 
-.report-list li + li,
-.plain-list li + li {
+.report-list li + li {
   margin-top: 8px;
 }
 
-.score-card strong,
-.summary-card strong {
-  display: block;
-  font-size: 1.85rem;
-  line-height: 1;
-  margin-bottom: 10px;
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
 }
 
-.report-intro {
-  font-size: 1.1rem;
-  line-height: 1.7;
+.score-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.7);
+  padding: 16px;
+}
+
+.score-card.winner {
+  border-color: rgba(41, 90, 82, 0.5);
+  background: rgba(217, 235, 229, 0.4);
+  box-shadow: 0 4px 16px rgba(41,90,82,0.1);
+}
+
+.score-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+
+.score-card-badge {
+  margin-bottom: 12px;
+}
+
+.score-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(214,204,188,0.5);
+}
+
+.score-metric:last-of-type {
+  border-bottom: none;
+}
+
+.score-metric-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.score-metric-value {
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.score-horizon {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(214,204,188,0.5);
+  display: grid;
+  gap: 12px;
+}
+
+.score-horizon-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.score-horizon-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.score-horizon-text {
+  font-size: 0.92rem;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.report-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.report-actions .primary-button,
+.report-actions .secondary-button {
+  flex: 1;
+  min-width: 120px;
 }
 
 @media (max-width: 980px) {
@@ -683,10 +801,25 @@ select {
 
   .report-card {
     background: white;
+    gap: 12px;
+  }
+
+  .report-section {
+    background: white;
+    border: 1px solid #ddd;
+    break-inside: avoid;
+  }
+
+  .report-section.highlight {
+    background: #f0f7f4;
   }
 
   .score-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .score-card.winner {
+    background: #f0f7f4;
   }
 }
     </style>
@@ -1646,57 +1779,94 @@ function renderBias() {
 
 function renderReport() {
   const report = generateReport();
+  const winnerLabel = report.optionSummaries[0]?.label || "";
+
+  // Break summary into sentences for cleaner display
+  const summaryBullets = report.summary
+    .split(". ")
+    .map(s => s.trim())
+    .filter(s => s.length > 10)
+    .map(s => s.endsWith(".") ? s : s + ".");
+
   stepContent.innerHTML = `
     <div class="report-card">
+
       <div class="report-section">
-        <p class="section-kicker">Decision</p>
+        <p class="section-kicker">Your decision</p>
         <h3>${escapeHtml(report.title)}</h3>
         <p class="report-intro">${escapeHtml(report.intro)}</p>
       </div>
-      <div class="report-section">
-        <p class="section-kicker">What your answers suggest</p>
-        <p>${escapeHtml(report.summary)}</p>
-        <ul class="report-list">
-          ${report.optionNames.map((name) => `<li>${escapeHtml(name)}</li>`).join("")}
-        </ul>
-      </div>
-      <div class="report-section">
+
+      <div class="report-section highlight">
         <p class="section-kicker">Current strongest path</p>
         <h3>${escapeHtml(report.recommendation.title)}</h3>
         <p>${escapeHtml(report.recommendation.body)}</p>
       </div>
+
+      <div class="report-section">
+        <p class="section-kicker">What your answers suggest</p>
+        <ul class="report-bullets">
+          ${summaryBullets.map(s => `<li>${escapeHtml(s)}</li>`).join("")}
+        </ul>
+      </div>
+
       <div class="report-section">
         <p class="section-kicker">Option snapshot</p>
         <div class="score-grid">
-          ${report.optionSummaries.map(renderOptionSummary).join("")}
+          ${report.optionSummaries.map(s => renderOptionSummary(s, winnerLabel)).join("")}
         </div>
       </div>
+
       <div class="report-section">
         <p class="section-kicker">Watch-outs</p>
-        <ul class="report-list">
+        <ul class="report-bullets">
           ${report.watchouts.map((note) => `<li>${escapeHtml(note)}</li>`).join("")}
         </ul>
       </div>
+
       <div class="report-section no-print">
-        <button class="primary-button" onclick="window.print()" type="button">Save as PDF / Print</button>
+        <div class="report-actions">
+          <button class="secondary-button" onclick="window.print()" type="button">Print</button>
+          <button class="primary-button" onclick="window.print()" type="button">Save as PDF</button>
+        </div>
       </div>
+
     </div>
   `;
 }
 
-function renderOptionSummary(summary) {
+function renderOptionSummary(summary, winnerLabel) {
+  const isWinner = summary.label === winnerLabel && summary.hasMinimumScoring;
   return `
-    <div class="score-card">
-      <h3>${escapeHtml(summary.label)}</h3>
-      <div class="score-line"><span class="badge ${summary.fitBadge.kind}">${summary.fitBadge.label}</span></div>
-      <ul class="plain-list">
-        <li><strong>Values alignment:</strong> ${escapeHtml(summary.valuesLabel)}</li>
-        <li><strong>Long-term gain:</strong> ${escapeHtml(summary.upsideLabel)}</li>
-        <li><strong>Short-term friction:</strong> ${escapeHtml(summary.frictionLabel)}</li>
-        <li><strong>10 days:</strong> ${escapeHtml(summary.short)}</li>
-        <li><strong>10 months:</strong> ${escapeHtml(summary.medium)}</li>
-        <li><strong>10 years:</strong> ${escapeHtml(summary.long)}</li>
-      </ul>
+    <div class="score-card ${isWinner ? "winner" : ""}">
+      <div class="score-card-title">${escapeHtml(summary.label)}</div>
+      <div class="score-card-badge"><span class="badge ${summary.fitBadge.kind}">${summary.fitBadge.label}</span></div>
+      <div class="score-metric">
+        <span class="score-metric-label">Values fit</span>
+        <span class="score-metric-value">${escapeHtml(summary.valuesLabel)}</span>
+      </div>
+      <div class="score-metric">
+        <span class="score-metric-label">Long-term gain</span>
+        <span class="score-metric-value">${escapeHtml(summary.upsideLabel)}</span>
+      </div>
+      <div class="score-metric">
+        <span class="score-metric-label">Short-term friction</span>
+        <span class="score-metric-value">${escapeHtml(summary.frictionLabel)}</span>
+      </div>
+      <div class="score-horizon">
+        <div class="score-horizon-row">
+          <span class="score-horizon-label">10 days</span>
+          <span class="score-horizon-text">${escapeHtml(summary.short)}</span>
+        </div>
+        <div class="score-horizon-row">
+          <span class="score-horizon-label">10 months</span>
+          <span class="score-horizon-text">${escapeHtml(summary.medium)}</span>
+        </div>
+        <div class="score-horizon-row">
+          <span class="score-horizon-label">10 years</span>
+          <span class="score-horizon-text">${escapeHtml(summary.long)}</span>
+        </div>
+      </div>
     </div>
   `;
 }
