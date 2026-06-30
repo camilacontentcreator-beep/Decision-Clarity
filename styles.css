@@ -21,9 +21,7 @@ body {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
   color: var(--ink);
-  background:
-    radial-gradient(circle at top left, rgba(255, 255, 255, 0.8), transparent 32%),
-    linear-gradient(160deg, #ece1cd 0%, #f4efe5 46%, #efe9dd 100%);
+  background: linear-gradient(180deg, #1a1030 0, #1a1030 300px, #eceaf4 430px, #eceaf4 100%);
   min-height: 100vh;
 }
 
@@ -41,8 +39,30 @@ select {
 }
 
 .hero {
+  max-width: 100%;
+  margin: -48px -24px 28px;
+  padding: 64px 24px 52px;
+  background-image:
+    url("clouds.jpg");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 120px;
+  background: linear-gradient(to bottom, transparent, #1a1030);
+  pointer-events: none;
+}
+
+.hero-inner {
   max-width: 760px;
-  margin-bottom: 28px;
+  position: relative;
+  z-index: 1;
 }
 
 .eyebrow {
@@ -50,7 +70,7 @@ select {
   text-transform: uppercase;
   letter-spacing: 0.14em;
   font-size: 0.78rem;
-  color: var(--muted);
+  color: #e8d8f8;
 }
 
 .hero h1 {
@@ -59,14 +79,17 @@ select {
   line-height: 0.98;
   letter-spacing: -0.04em;
   max-width: 12ch;
+  color: #fff;
+  text-shadow: 0 2px 24px rgba(30, 10, 50, 0.5);
 }
 
 .hero-copy {
   margin: 18px 0 0;
   max-width: 58ch;
-  color: var(--muted);
+  color: #ddd0f0;
   font-size: 1.08rem;
   line-height: 1.65;
+  text-shadow: 0 1px 8px rgba(30, 10, 50, 0.4);
 }
 
 .hero-fit {
@@ -79,12 +102,13 @@ select {
 }
 
 .hero-fit li {
-  border: 1px solid rgba(41, 90, 82, 0.18);
+  border: 1px solid rgba(220, 190, 255, 0.45);
   border-radius: 999px;
   padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.58);
-  color: var(--ink);
-  font-size: 0.94rem;
+  background: rgba(60, 20, 80, 0.3);
+  backdrop-filter: blur(4px);
+  color: #e8d8f8;
+  font-size: 0.82rem;
 }
 
 .app-card {
@@ -97,9 +121,9 @@ select {
 .progress-panel,
 .content-panel {
   background: rgba(251, 248, 242, 0.86);
-  border: 1px solid rgba(214, 204, 188, 0.72);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 18px 48px rgba(10, 10, 30, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
 }
 
 .progress-panel {
@@ -619,6 +643,12 @@ select {
 @media (max-width: 720px) {
   .page-shell {
     padding: 28px 16px 36px;
+  }
+
+  .hero {
+    margin: -28px -16px 28px;
+    padding: 46px 16px 42px;
+    background-position: 42% center;
   }
 
   .content-panel,
