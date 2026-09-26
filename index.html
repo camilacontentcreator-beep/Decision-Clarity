@@ -3,42 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Decision Clarity</title>
+    <title>Decision Clarity | Quick Decision Tool</title>
+    <meta
+      name="description"
+      content="A private, quick decision tool for urgent choices. Answer simple prompts and leave with a practical next step."
+    />
     <meta name="feedback-email" content="decisionclarityapp@gmail.com" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="urgent.css" />
   </head>
   <body>
     <div class="page-shell">
       <header class="hero">
         <div class="hero-inner">
           <p class="eyebrow">Decision Clarity</p>
-          <h1>Think clearly when the choice matters.</h1>
-          <p class="hero-copy">
-            When emotions are high and the stakes are real, it is hard to think
-            clearly. Decision Clarity is here to help you pause and put the
-            decision into perspective. No tool can decide for you, and this one
-            will not try. It is here to help analyze your options and distinguish
-            between feelings and facts.
-          </p>
-          <ul class="hero-fit" aria-label="Best fit">
-            <li>Takes about 10–15 minutes</li>
-            <li>Best for serious decisions</li>
-            <li>Private, structured, and neutral</li>
-          </ul>
+          <h1>Find the next clear step.</h1>
+          <p class="hero-copy">A few simple questions to help you see the decision more clearly.</p>
         </div>
       </header>
 
-      <main class="app-card">
+      <main class="app-card" aria-labelledby="step-title">
         <aside class="progress-panel">
-          <p class="progress-label">Flow</p>
+          <p class="progress-label">Quick flow</p>
           <ol id="step-list" class="step-list"></ol>
           <div class="panel-note">
-            <p class="note-title">Tone of this tool</p>
+            <p class="note-title">Original version</p>
             <p>
-              Calm, rational, and structured. The final report highlights
-              options, tradeoffs, uncertainty, constraints, and the cost of
-              inaction. Your answers stay in this browser.
+              The deeper 10-15 minute flow is still available if you want the full
+              values, constraints, and consequence map.
             </p>
+            <a class="text-link" href="full-version/">Open full version</a>
             <button id="feedback-button" class="feedback-link" type="button">Send feedback</button>
           </div>
         </aside>
@@ -47,20 +40,16 @@
           <div class="top-bar">
             <div>
               <p class="step-kicker" id="step-kicker">Step 1</p>
-              <h2 id="step-title">Decision framing</h2>
+              <h2 id="step-title">What area of life is troubling you at the moment?</h2>
             </div>
-            <p class="step-count" id="step-count">1 / 8</p>
+            <p class="step-count" id="step-count">1 / 6</p>
           </div>
 
           <div id="step-content" class="step-content"></div>
 
           <div class="actions">
-            <button id="back-button" class="secondary-button" type="button">
-              Back
-            </button>
-            <button id="next-button" class="primary-button" type="button">
-              Next
-            </button>
+            <button id="back-button" class="secondary-button" type="button">Back</button>
+            <button id="next-button" class="primary-button" type="button">Next</button>
           </div>
         </section>
       </main>
@@ -93,6 +82,6 @@
       async
       src="https://gc.zgo.at/count.js"
     ></script>
-    <script src="app.js"></script>
+    <script src="urgent.js"></script>
   </body>
 </html>
